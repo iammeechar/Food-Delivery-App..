@@ -29,3 +29,4 @@ class Order(View):
         }
 
         #render the template
+        return render(request, 'Customer/ ')
