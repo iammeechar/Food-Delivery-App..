@@ -15,10 +15,10 @@ class Order(View):
     def get(self, request, *args, **kwargs):
         
         #get each item from each category
-        appetizers = MenuItems.objects.filter(category_name_contains='Appetizer')
-        entres = MenuItems.objects.filter(category_name_contains='Entre')
-        desserts = MenuItems.objects.filter(category_name_contains='Desserts')
-        drinks = MenuItems.objects.filter(category_name_contains='Drinks')
+        appetizers = MenuItems.objects.filter(category__name__contains='Appetizer')
+        entres = MenuItems.objects.filter(category__name__contains='Entre')
+        desserts = MenuItems.objects.filter(category__name__contains='Dessert')
+        drinks = MenuItems.objects.filter(category__name__contains='Drink')
         #pass into context
         context = {
             'appetizers': appetizers,
@@ -29,4 +29,18 @@ class Order(View):
         }
 
         #render the template
-        return render(request, 'Customer/ ')
+        return render(request, 'Customer/order.html ')
+    
+    def post(self, request, *args, **kwargs):
+        order_items ={
+            'items':[]
+        }
+
+        items = request.POST.getlist('items[]')
+        for item in items:
+            menu_item = MenuItems.objects.get(pk__containts= int(item))
+            item_data = {
+                'id':menu_item.pk,
+                'name': menu_item.name,
+                'price': menu_item.price
+            }
