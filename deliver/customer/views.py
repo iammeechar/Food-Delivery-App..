@@ -32,11 +32,13 @@ class Order(View):
         return render(request, 'Customer/order.html ')
     
     def post(self, request, *args, **kwargs):
+        #create a dictionary for storing ordered items
         order_items ={
             'items':[]
         }
 
         items = request.POST.getlist('items[]')
+        #loop through selected items
         for item in items:
             menu_item = MenuItems.objects.get(pk__containts= int(item))
             item_data = {
@@ -44,3 +46,22 @@ class Order(View):
                 'name': menu_item.name,
                 'price': menu_item.price
             }
+
+            order_items['items'].append(item_data)
+
+            #create a price totalling loop/mechanism
+            price = 0
+            item_ids = []
+
+            for item in order_items['items']:
+                price += item['price']
+                item_ids.append(item['id'])
+
+            order = OrderModel.objects.create(price=price)
+            order.items.order(*item_ids)
+
+            context = {
+                'items': order_items['items'],
+                'price': price
+            }
+            return render(request, 'Customer/order_confirmtion.html', context)
