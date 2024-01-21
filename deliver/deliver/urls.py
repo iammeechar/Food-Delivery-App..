@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from customer.views import Index, About #import links to the index and about pages.
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    #create paths to access the index and about pages.
+    path('', Index.as_view(), name='index'),
+    path('about/', About.as_view(), name='about'),
 ]
