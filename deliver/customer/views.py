@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from.models import MenuItems, Category, OrderModel
 # Create your views here.
 from django.views import View
 #create an index view to handle any get requests.
